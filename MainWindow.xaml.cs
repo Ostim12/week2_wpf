@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using Microsoft.Win32;
+using System.IO;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -80,29 +81,22 @@ namespace week2
         private void ButtonLoadNumbers_Click(object sender, RoutedEventArgs e)
         {
             lstNumbers.Items.Clear();
-
+            var fileContent = string.Empty;
+            var filePath = string.Empty;
             string loaded_numbers;
 
-            try
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.Filter = "txt files (*.txt)|*.txt";
+            if (openFileDialog.ShowDialog() == true)
             {
-                StreamReader sr = new StreamReader("Numbers.txt");
-                loaded_numbers = sr.ReadToEnd();
-                Console.WriteLine(loaded_numbers);
-            }
-            catch (Exception ex) {
-                Console.WriteLine("file not found, creating new file");
-                StreamWriter wr = new StreamWriter("Numbers.txt");
-                wr.Write("32 43 12 54 123 65 23 67");
-                loaded_numbers = "32 43 12 54 123 65 23 67";
-                wr.Close();
-            }
+                loaded_numbers = File.ReadAllText(openFileDialog.FileName);
 
-            Array array = loaded_numbers.Split(" ");
-            foreach (string number in array)
-            {
-                lstNumbers.Items.Add(Convert.ToInt32(number));
+                Array array = loaded_numbers.Split(" ");
+                foreach (string number in array)
+                {
+                    lstNumbers.Items.Add(Convert.ToInt32(number));
+                }
             }
-
         }
 
         private void ButtonSortNumbers_Click(object sender, RoutedEventArgs e)
